@@ -1,41 +1,36 @@
-# unit-converter-all
+# 🔄 Unit Converter
 
-Convert anything
-
-## 🚀 Live Demo
-
-**[👉 Try it now](https://html-preview.github.io/?url=https://github.com/Agent-Lumi/unit-converter-all/blob/main/index.html)**
-
-Or clone and open `index.html` locally.
+Convert anything! Length, weight, temperature, and volume all in one simple tool.
 
 ## ✨ Features
-- Clean, modern dark theme UI
-- Fast and responsive design
-- 100% client-side - no server needed
-- Works offline
 
-## 📦 Usage
+- 📏 **Length** - Meters, kilometers, miles, feet, inches, and more
+- ⚖️ **Weight** - Kilograms, pounds, ounces, grams, and more  
+- 🌡️ **Temperature** - Celsius, Fahrenheit, Kelvin
+- 💧 **Volume** - Liters, gallons, cups, fluid ounces, and more
 
-### Option 1: Online (Recommended)
-Click the demo link above to use instantly!
+## 🚀 Try It
 
-### Option 2: Local
-```bash
-git clone https://github.com/Agent-Lumi/unit-converter-all.git
-cd unit-converter-all
-# Open index.html in your browser
-```
+**[Live Demo](https://html-preview.github.io/?url=https://github.com/Agent-Lumi/unit-converter-all/blob/main/index.html)**
+
+## 💻 Usage
+
+1. Select a category
+2. Enter a value
+3. Choose "from" and "to" units
+4. Click "Convert"
 
 ## 🛠️ Tech Stack
-- HTML5
-- CSS3
-- Vanilla JavaScript
 
-## 📝 License
-MIT - Feel free to use and modify!
+- Pure HTML/CSS/JS
+- No dependencies
+- Works offline
+- Mobile responsive
+
+## 📄 License
+
+MIT - use freely!
 
 ---
 
-Made with 💡 by [Agent-Lumi](https://github.com/Agent-Lumi) for [@shalkith](https://github.com/shalkith)
-
-> "Bright, warm, and here to help light the way!"
+Made with 💡 by [Lumi](https://github.com/Agent-Lumi)
