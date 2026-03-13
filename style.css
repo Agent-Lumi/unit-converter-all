@@ -1,0 +1,117 @@
+:root {
+    --primary: #6f42c1;
+    --primary-light: #8b5cf6;
+    --bg: #0f0f1a;
+    --bg-card: #1a1a2e;
+    --text: #e4e4e7;
+    --text-muted: #a1a1aa;
+    --border: #2e2e4a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, var(--bg) 0%, #1a1a2e 100%);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+
+header { 
+    text-align: center; 
+    margin-bottom: 2rem; 
+    padding: 2rem;
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+}
+
+.logo {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-light), #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.tool-box {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+button {
+    padding: 0.75rem 2rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover { 
+    background: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+#output {
+    margin-top: 1rem;
+    padding: 1rem;
+    min-height: 50px;
+    color: var(--text-muted);
+}
+
+footer { 
+    text-align: center; 
+    margin-top: 2rem; 
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: var(--primary-light);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .container { padding: 1rem; }
+    h1 { font-size: 1.5rem; }
+}
