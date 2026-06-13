@@ -258,3 +258,87 @@ shareBtn.onclick = () => {
 };
 document.body.appendChild(shareBtn);
 </script>
+<script>
+// Copy result functionality
+function copyResult() {
+    const resultText = document.getElementById('result').innerText;
+    if (resultText && resultText.includes('=')) {
+        const cleanText = resultText.replace(/<[^>]*>/g, '').trim();
+        navigator.clipboard.writeText(cleanText).then(() => {
+            const btn = document.getElementById('copyBtn');
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Copied!';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }, 1500);
+        });
+    }
+}
+
+// Add copy button next to result
+document.addEventListener('DOMContentLoaded', () => {
+    const resultDiv = document.getElementById('result');
+    if (resultDiv) {
+        const copyBtn = document.createElement('button');
+        copyBtn.id = 'copyBtn';
+        copyBtn.textContent = '📋 Copy';
+        copyBtn.className = 'copy-btn';
+        copyBtn.onclick = copyResult;
+        copyBtn.style.cssText = 'margin-top: 10px; padding: 8px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;';
+        resultDiv.parentNode.insertBefore(copyBtn, resultDiv.nextSibling);
+    }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    // Ctrl/Cmd + Enter = Convert
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        convert();
+    }
+    // Ctrl/Cmd + C = Copy result (if result exists)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'c' && e.shiftKey) {
+        e.preventDefault();
+        copyResult();
+    }
+    // Escape = Clear input
+    if (e.key === 'Escape') {
+        document.getElementById('value').value = '';
+        document.getElementById('value').focus();
+        document.getElementById('result').innerHTML = '';
+    }
+    // Tab between From/To
+    if (e.key === 'Tab' && e.shiftKey) {
+        const fromSelect = document.getElementById('from');
+        const toSelect = document.getElementById('to');
+        if (document.activeElement === fromSelect) {
+            e.preventDefault();
+            toSelect.focus();
+        }
+    }
+});
+
+// Show keyboard shortcuts hint
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.container');
+    const hint = document.createElement('div');
+    hint.className = 'keyboard-hint';
+    hint.innerHTML = '⌨️ <strong>Shortcuts:</strong> Ctrl+Enter = Convert | Esc = Clear | Shift+Ctrl+C = Copy';
+    hint.style.cssText = 'margin-top: 20px; padding: 12px; background: rgba(102,126,234,0.1); border-radius: 8px; font-size: 0.85rem; color: #667eea; text-align: center;';
+    container.appendChild(hint);
+});
+</script>
+<style>
+.copy-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+@media (max-width: 480px) {
+    .keyboard-hint {
+        font-size: 0.75rem !important;
+        padding: 8px !important;
+    }
+}
+</style>
