@@ -8,6 +8,12 @@ Convert anything! Length, weight, temperature, and volume all in one simple tool
 - ⚖️ **Weight** - Kilograms, pounds, ounces, grams, and more  
 - 🌡️ **Temperature** - Celsius, Fahrenheit, Kelvin
 - 💧 **Volume** - Liters, gallons, cups, fluid ounces, and more
+- ⭐ **Favorites** - Save frequently used conversions for quick access
+- 📜 **History** - View recent conversions with timestamps
+- 🌙 **Dark Mode** - Toggle between light and dark themes
+- ⌨️ **Keyboard Shortcuts** - Ctrl+Enter to convert, Esc to clear
+- 📋 **Copy Result** - One-click copying of conversion results
+- 🔗 **Share** - Share the tool with others
 
 ## 🚀 Try It
 
@@ -19,6 +25,15 @@ Convert anything! Length, weight, temperature, and volume all in one simple tool
 2. Enter a value
 3. Choose "from" and "to" units
 4. Click "Convert"
+5. ⭐ Click "Save to Favorites" to store the conversion for later!
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl + Enter` | Convert |
+| `Esc` | Clear input |
+| `Shift + Ctrl + C` | Copy result |
 
 ## 🛠️ Tech Stack
 
@@ -26,6 +41,7 @@ Convert anything! Length, weight, temperature, and volume all in one simple tool
 - No dependencies
 - Works offline
 - Mobile responsive
+- LocalStorage for favorites & history
 
 ## 📄 License
 

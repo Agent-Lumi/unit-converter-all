@@ -1,5 +1,5 @@
 // Unit Converter - Length, Weight, Temperature, Volume
-// Enhanced with Conversion History Feature ✨
+// Enhanced with Conversion History & Favorites Features ✨
 
 const conversions = {
     length: {
@@ -106,6 +106,160 @@ function displayHistory() {
     `).join('');
 }
 
+// ============ FAVORITES MANAGEMENT ============
+const MAX_FAVORITES = 8;
+
+function getFavorites() {
+    const saved = localStorage.getItem('conversion-favorites');
+    return saved ? JSON.parse(saved) : [];
+}
+
+function saveFavorites(favorites) {
+    localStorage.setItem('conversion-favorites', JSON.stringify(favorites.slice(0, MAX_FAVORITES)));
+}
+
+function isAlreadyFavorite(from, to, category) {
+    const favorites = getFavorites();
+    return favorites.some(f => f.from === from && f.to === to && f.category === category);
+}
+
+function addFavorite(name, from, to, category) {
+    const favorites = getFavorites();
+    
+    if (isAlreadyFavorite(from, to, category)) {
+        showNotification('⭐ Already in favorites!', 'info');
+        return false;
+    }
+    
+    if (favorites.length >= MAX_FAVORITES) {
+        showNotification('⚠️ Maximum favorites reached! Remove one to add more.', 'warning');
+        return false;
+    }
+    
+    favorites.push({
+        id: Date.now(),
+        name: name || `${unitNames[from]} → ${unitNames[to]}`,
+        from,
+        to,
+        category,
+        createdAt: new Date().toISOString()
+    });
+    
+    saveFavorites(favorites);
+    displayFavorites();
+    showNotification('⭐ Added to favorites!', 'success');
+    return true;
+}
+
+function removeFavorite(id) {
+    const favorites = getFavorites().filter(f => f.id !== id);
+    saveFavorites(favorites);
+    displayFavorites();
+    showNotification('🗑️ Removed from favorites', 'info');
+}
+
+function clearFavorites() {
+    localStorage.removeItem('conversion-favorites');
+    displayFavorites();
+    showNotification('🗑️ All favorites cleared', 'info');
+}
+
+function loadFavorite(id) {
+    const favorite = getFavorites().find(f => f.id === id);
+    if (!favorite) return;
+    
+    // Set category
+    document.getElementById('category').value = favorite.category;
+    updateUnits();
+    
+    // Set from/to
+    document.getElementById('from').value = favorite.from;
+    document.getElementById('to').value = favorite.to;
+    
+    // Focus on value input
+    document.getElementById('value').focus();
+    
+    showNotification('✅ Loaded favorite conversion', 'success');
+}
+
+function displayFavorites() {
+    const favorites = getFavorites();
+    const container = document.getElementById('favorites-container');
+    const listEl = document.getElementById('favorites-list');
+    
+    if (!container || !listEl) return;
+    
+    if (favorites.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    container.style.display = 'block';
+    listEl.innerHTML = favorites.map(f => `
+        <div class="favorite-item" title="Click to load this conversion">
+            <div class="favorite-info" onclick="loadFavorite(${f.id})">
+                <span class="favorite-name">${f.name}</span>
+                <span class="favorite-conversion">${getCategoryIcon(f.category)} ${unitNames[f.from]} → ${unitNames[f.to]}</span>
+            </div>
+            <div class="favorite-actions">
+                <button class="favorite-btn" onclick="loadFavorite(${f.id})">Load</button>
+                <button class="favorite-btn favorite-delete" onclick="removeFavorite(${f.id})">✕</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function getCategoryIcon(category) {
+    const icons = { length: '📏', weight: '⚖️', temperature: '🌡️', volume: '💧' };
+    return icons[category] || '🔄';
+}
+
+function showNotification(message, type = 'info') {
+    // Simple notification using existing notification system if available
+    if (typeof notify === 'function' && type === 'success') {
+        notify('Unit Converter', message);
+    }
+    
+    // Visual feedback
+    const resultDiv = document.getElementById('result');
+    if (resultDiv) {
+        const originalHTML = resultDiv.innerHTML;
+        resultDiv.innerHTML = `<span style="color: ${type === 'success' ? '#4ecdc4' : type === 'warning' ? '#ffd700' : '#888'}">${message}</span>`;
+        setTimeout(() => {
+            if (resultDiv.innerHTML.includes(message)) {
+                resultDiv.innerHTML = originalHTML;
+            }
+        }, 2000);
+    }
+}
+
+// ============ SAVE TO FAVORITES BUTTON ============
+function createSaveFavoriteButton() {
+    const resultDiv = document.getElementById('result');
+    if (!resultDiv || document.getElementById('saveFavoriteBtn')) return;
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.id = 'saveFavoriteBtn';
+    saveBtn.className = 'save-favorite-btn';
+    saveBtn.innerHTML = '⭐ Save to Favorites';
+    saveBtn.onclick = () => {
+        const category = document.getElementById('category').value;
+        const from = document.getElementById('from').value;
+        const to = document.getElementById('to').value;
+        const value = parseFloat(document.getElementById('value').value);
+        
+        if (isNaN(value)) {
+            showNotification('❌ Enter a value first', 'warning');
+            return;
+        }
+        
+        const name = `${value} ${unitNames[from]} → ${unitNames[to]}`;
+        addFavorite(name, from, to, category);
+    };
+    
+    resultDiv.parentNode.insertBefore(saveBtn, resultDiv.nextSibling);
+}
+
 function convertTemperature(value, from, to) {
     let celsius;
     
@@ -162,6 +316,9 @@ function convert() {
         result: formattedResult,
         category: category
     });
+    
+    // Create save button if not exists
+    createSaveFavoriteButton();
 }
 
 function updateUnits() {
@@ -184,9 +341,17 @@ function updateUnits() {
 document.addEventListener('DOMContentLoaded', () => {
     updateUnits();
     displayHistory();
+    displayFavorites();
+    createSaveFavoriteButton();
 });
 
 // Export for global access
 window.convert = convert;
 window.updateUnits = updateUnits;
 window.clearHistory = clearHistory;
+window.addFavorite = addFavorite;
+window.removeFavorite = removeFavorite;
+window.loadFavorite = loadFavorite;
+window.clearFavorites = clearFavorites;
+window.getFavorites = getFavorites;
+window.isAlreadyFavorite = isAlreadyFavorite;
