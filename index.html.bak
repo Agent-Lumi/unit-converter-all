@@ -40,6 +40,15 @@
             <div id="result" class="result"></div>
         </div>
         
+        <!-- NEW: Favorites Section -->
+        <div id="favorites-container" class="favorites-container" style="display:none;">
+            <div class="favorites-header">
+                <h3>⭐ Favorite Conversions</h3>
+                <button class="clear-btn" onclick="clearFavorites()">Clear All</button>
+            </div>
+            <div id="favorites-list" class="favorites-list"></div>
+        </div>
+        
         <!-- NEW: Conversion History Section -->
         <div id="history-container" class="history-container" style="display:none;">
             <div class="history-header">
@@ -62,6 +71,158 @@
 .container { animation: fadeIn 0.3s ease-out; }
 button { transition: all 0.2s ease; }
 button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+
+/* NEW: Favorites Section Styles */
+.favorites-container {
+    margin-top: 30px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,165,0,0.05) 100%);
+    border: 1px solid rgba(255,215,0,0.2);
+    border-radius: 16px;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.favorites-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.favorites-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255,215,0,0.3);
+}
+
+.favorites-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.favorite-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,215,0,0.15);
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.favorite-item:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,215,0,0.3);
+    transform: translateX(5px);
+}
+
+.favorite-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.favorite-name {
+    font-weight: 600;
+    color: #ffd700;
+}
+
+.favorite-conversion {
+    color: rgba(255,255,255,0.8);
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+.favorite-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.favorite-btn {
+    background: rgba(102,126,234,0.2);
+    border: 1px solid rgba(102,126,234,0.3);
+    color: #667eea;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.favorite-btn:hover {
+    background: rgba(102,126,234,0.3);
+}
+
+.favorite-delete {
+    background: rgba(255,107,107,0.2);
+    border: 1px solid rgba(255,107,107,0.3);
+    color: #ff6b6b;
+}
+
+.favorite-delete:hover {
+    background: rgba(255,107,107,0.3);
+}
+
+/* Save to favorites button */
+.save-favorite-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,165,0,0.2) 100%);
+    border: 1px solid rgba(255,215,0,0.4);
+    color: #ffd700;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.save-favorite-btn:hover {
+    background: linear-gradient(135deg, rgba(255,215,0,0.3) 0%, rgba(255,165,0,0.3) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,215,0,0.2);
+}
+
+.save-favorite-btn.saved {
+    background: rgba(255,215,0,0.1);
+    border-color: rgba(255,215,0,0.2);
+    color: rgba(255,215,0,0.6);
+    cursor: default;
+}
+
+/* Dark mode support for favorites */
+.dark-mode .favorites-container {
+    background: linear-gradient(135deg, rgba(255,215,0,0.05) 0%, rgba(255,165,0,0.03) 100%);
+}
+
+.dark-mode .favorite-item {
+    background: rgba(0,0,0,0.3);
+}
+
+.dark-mode .favorite-item:hover {
+    background: rgba(0,0,0,0.4);
+}
+
+@media (max-width: 480px) {
+    .favorite-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .favorite-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
 
 /* NEW: History Section Styles */
 .history-container {
@@ -342,3 +503,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 }
 </style>
+<script>
+// Request notification permission
+if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+}
+function notify(title, body) {
+    if (Notification.permission === 'granted') {
+        new Notification(title, { body });
+    }
+}
+</script>
