@@ -10,6 +10,7 @@ Convert anything! Length, weight, temperature, and volume all in one simple tool
 - 💧 **Volume** - Liters, gallons, cups, fluid ounces, and more
 - ⭐ **Favorites** - Save frequently used conversions for quick access
 - 📜 **History** - View recent conversions with timestamps
+- 📋 **Batch Conversion** - Convert multiple values at once
 - 🌙 **Dark Mode** - Toggle between light and dark themes
 - ⌨️ **Keyboard Shortcuts** - Ctrl+Enter to convert, Esc to clear
 - 📋 **Copy Result** - One-click copying of conversion results
@@ -27,6 +28,21 @@ Convert anything! Length, weight, temperature, and volume all in one simple tool
 4. Click "Convert"
 5. ⭐ Click "Save to Favorites" to store the conversion for later!
 
+### Batch Conversion
+
+Need to convert multiple values at once?
+
+1. Select your conversion category and units
+2. Scroll to the **Batch Conversion** section
+3. Enter multiple values, one per line
+4. Click "🚀 Convert Batch"
+5. Results appear with options to copy or export
+
+**Options:**
+- ✅ Include units in output
+- ✅ Comma-separated (for spreadsheets)
+- 📋 Copy all results at once
+
 ### Keyboard Shortcuts
 
 | Shortcut | Action |
@@ -34,6 +50,7 @@ Convert anything! Length, weight, temperature, and volume all in one simple tool
 | `Ctrl + Enter` | Convert |
 | `Esc` | Clear input |
 | `Shift + Ctrl + C` | Copy result |
+| `Shift + Ctrl + B` | Focus batch input |
 
 ## 🛠️ Tech Stack
 

@@ -355,3 +355,93 @@ window.loadFavorite = loadFavorite;
 window.clearFavorites = clearFavorites;
 window.getFavorites = getFavorites;
 window.isAlreadyFavorite = isAlreadyFavorite;
+
+// ============ BATCH CONVERSION ============
+function convertBatch() {
+    const batchInput = document.getElementById('batch-input');
+    const batchResult = document.getElementById('batch-result');
+    const batchOutput = document.getElementById('batch-output');
+    const batchStats = document.getElementById('batch-stats');
+    
+    const category = document.getElementById('category').value;
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
+    
+    const inputText = batchInput.value.trim();
+    if (!inputText) {
+        showNotification('❌ Enter values to convert', 'warning');
+        return;
+    }
+    
+    const lines = inputText.split('\n').filter(line => line.trim());
+    const includeUnits = document.getElementById('batch-include-units').checked;
+    const commaSeparated = document.getElementById('batch-comma-separated').checked;
+    
+    const results = [];
+    let validCount = 0;
+    let errorCount = 0;
+    
+    lines.forEach((line, index) => {
+        const value = parseFloat(line.trim());
+        if (isNaN(value)) {
+            results.push(commaSeparated ? '' : `Line ${index + 1}: Invalid`);
+            errorCount++;
+            return;
+        }
+        
+        let result;
+        if (category === 'temperature') {
+            result = convertTemperature(value, from, to);
+        } else {
+            const fromFactor = conversions[category][from];
+            const toFactor = conversions[category][to];
+            result = value * fromFactor / toFactor;
+        }
+        
+        const formattedResult = formatResult(result);
+        validCount++;
+        
+        if (commaSeparated) {
+            results.push(formattedResult);
+        } else {
+            const unitLabel = includeUnits ? ` ${to}` : '';
+            results.push(`${value} ${from} = ${formattedResult}${unitLabel}`);
+        }
+    });
+    
+    // Display results
+    batchOutput.value = commaSeparated ? results.join(', ') : results.join('\n');
+    batchResult.style.display = 'block';
+    
+    // Update stats
+    batchStats.innerHTML = `
+        <span>✓ ${validCount} converted</span>
+        <span>${errorCount > 0 ? `⚠️ ${errorCount} errors` : ''}</span>
+    `;
+    
+    // Animate the result section
+    batchResult.style.animation = 'none';
+    batchResult.offsetHeight; // Trigger reflow
+    batchResult.style.animation = 'fadeIn 0.3s ease-out';
+}
+
+function copyBatchResults() {
+    const batchOutput = document.getElementById('batch-output');
+    const copyBtn = document.querySelector('.copy-batch-btn');
+    
+    if (!batchOutput.value) return;
+    
+    navigator.clipboard.writeText(batchOutput.value).then(() => {
+        copyBtn.textContent = '✅ Copied!';
+        copyBtn.classList.add('copied');
+        
+        setTimeout(() => {
+            copyBtn.textContent = '📋 Copy All';
+            copyBtn.classList.remove('copied');
+        }, 1500);
+    });
+}
+
+// Export batch functions
+window.convertBatch = convertBatch;
+window.copyBatchResults = copyBatchResults;

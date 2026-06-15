@@ -58,6 +58,36 @@
             <div id="history-list" class="history-list"></div>
         </div>
         
+        <!-- NEW: Batch Conversion Section -->
+        <div id="batch-container" class="batch-container">
+            <div class="batch-header">
+                <h3>📋 Batch Conversion</h3>
+                <span class="batch-hint">Convert multiple values at once (one per line)</span>
+            </div>
+            <div class="batch-input-area">
+                <textarea id="batch-input" placeholder="Enter values here, one per line...&#10;Example:&#10;5&#10;10.5&#10;25&#10;100" rows="6"></textarea>
+                <div class="batch-options">
+                    <label>
+                        <input type="checkbox" id="batch-include-units" checked>
+                        Include units in output
+                    </label>
+                    <label>
+                        <input type="checkbox" id="batch-comma-separated">
+                        Comma-separated output
+                    </label>
+                </div>
+                <button onclick="convertBatch()" class="batch-btn">🚀 Convert Batch</button>
+            </div>
+            <div id="batch-result" class="batch-result" style="display:none;">
+                <div class="batch-result-header">
+                    <h4>Results</h4>
+                    <button class="copy-batch-btn" onclick="copyBatchResults()">📋 Copy All</button>
+                </div>
+                <textarea id="batch-output" readonly rows="6"></textarea>
+                <div class="batch-stats" id="batch-stats"></div>
+            </div>
+        </div>
+        
         <footer>
             Made with 💡 by <a href="https://github.com/Agent-Lumi">Lumi</a>
         </footer>
@@ -479,6 +509,15 @@ document.addEventListener('keydown', (e) => {
             toSelect.focus();
         }
     }
+    // Ctrl/Cmd + Shift + B = Focus batch input
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'b') {
+        e.preventDefault();
+        const batchInput = document.getElementById('batch-input');
+        if (batchInput) {
+            batchInput.focus();
+            batchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
 });
 
 // Show keyboard shortcuts hint
@@ -486,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.container');
     const hint = document.createElement('div');
     hint.className = 'keyboard-hint';
-    hint.innerHTML = '⌨️ <strong>Shortcuts:</strong> Ctrl+Enter = Convert | Esc = Clear | Shift+Ctrl+C = Copy';
+    hint.innerHTML = '⌨️ <strong>Shortcuts:</strong> Ctrl+Enter = Convert | Esc = Clear | Shift+Ctrl+C = Copy | Shift+Ctrl+B = Batch';
     hint.style.cssText = 'margin-top: 20px; padding: 12px; background: rgba(102,126,234,0.1); border-radius: 8px; font-size: 0.85rem; color: #667eea; text-align: center;';
     container.appendChild(hint);
 });
@@ -500,6 +539,184 @@ document.addEventListener('DOMContentLoaded', () => {
     .keyboard-hint {
         font-size: 0.75rem !important;
         padding: 8px !important;
+    }
+}
+
+/* NEW: Batch Conversion Styles */
+.batch-container {
+    margin-top: 30px;
+    background: linear-gradient(135deg, rgba(78,205,196,0.1) 0%, rgba(68,160,141,0.05) 100%);
+    border: 1px solid rgba(78,205,196,0.2);
+    border-radius: 16px;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.batch-header {
+    margin-bottom: 15px;
+}
+
+.batch-header h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: #4ecdc4;
+}
+
+.batch-hint {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    display: block;
+}
+
+.batch-input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#batch-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(78,205,196,0.3);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    color: inherit;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    resize: vertical;
+    min-height: 100px;
+}
+
+#batch-input:focus {
+    outline: none;
+    border-color: rgba(78,205,196,0.6);
+    box-shadow: 0 0 0 3px rgba(78,205,196,0.1);
+}
+
+.batch-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.9rem;
+}
+
+.batch-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.batch-options input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #4ecdc4;
+}
+
+.batch-btn {
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%) !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+.batch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(78,205,196,0.3) !important;
+}
+
+.batch-result {
+    margin-top: 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 15px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.batch-result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.batch-result-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #4ecdc4;
+}
+
+.copy-batch-btn {
+    padding: 6px 12px;
+    background: rgba(78,205,196,0.2);
+    border: 1px solid rgba(78,205,196,0.3);
+    color: #4ecdc4;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.copy-batch-btn:hover {
+    background: rgba(78,205,196,0.3);
+    transform: translateY(-1px);
+}
+
+.copy-batch-btn.copied {
+    background: rgba(46,204,113,0.3);
+    border-color: rgba(46,204,113,0.5);
+    color: #2ecc71;
+}
+
+#batch-output {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(78,205,196,0.2);
+    border-radius: 8px;
+    background: rgba(0,0,0,0.2);
+    color: inherit;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.batch-stats {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.85rem;
+    opacity: 0.7;
+    display: flex;
+    justify-content: space-between;
+}
+
+.dark-mode .batch-container {
+    background: linear-gradient(135deg, rgba(78,205,196,0.05) 0%, rgba(68,160,141,0.03) 100%);
+}
+
+.dark-mode #batch-input {
+    background: rgba(0,0,0,0.2);
+}
+
+.dark-mode .batch-result {
+    background: rgba(0,0,0,0.2);
+}
+
+@media (max-width: 480px) {
+    .batch-options {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .batch-result-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .batch-stats {
+        flex-direction: column;
+        gap: 5px;
     }
 }
 </style>
